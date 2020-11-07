@@ -83,7 +83,7 @@ public class WhiteSquareBehaviour : MonoBehaviour
 
     void Update()
     {
-        gameObject.transform.Rotate(0, 0, 100 * Time.deltaTime);
+        // gameObject.transform.Rotate(0, 0, 100 * Time.deltaTime);
 
         Vector3 accel = new Vector3(last_input_report.x, last_input_report.y, 0) * Time.deltaTime * 0.3f;
         velocity = velocity*0.1f + accel;

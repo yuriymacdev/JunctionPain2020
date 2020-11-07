@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\BackGroundObjects.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\ObjectMovement.cs" />
     <Compile Include="Assets\Scripts\ObjectSpawner.cs" />

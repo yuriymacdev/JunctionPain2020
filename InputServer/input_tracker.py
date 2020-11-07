@@ -19,7 +19,9 @@ class Config:
         self.model3 = "landmarks-regression-retail-0009.xml"
         self.model4 = "gaze-estimation-adas-0002.xml"
         self.device = "CPU"
-        # self.device = "GPU"
+        if len(sys.argv) >= 2:
+            if sys.argv[1] == "gpu":
+                self.device = "GPU"
         self.prob_threshold = 0.5
 
         self.source = 0
@@ -52,11 +54,14 @@ def infer_on_stream(args):
     output_intermediate_model = args.output_intermediate_model
 
     cap = cv2.VideoCapture(0)
-    cap.set(cv2.CAP_PROP_FPS, 60)
-    width = int(cap.get(3))
-    height = int(cap.get(4))
+    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 960)
+    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 540)
+    cap.set(cv2.CAP_PROP_FPS, 30)
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     print("Capture FPS: {}".format(fps))
+    print("Capture Size: {}x{}".format(width, height))
 
     data_link = InputReporter(args)
 
@@ -99,6 +104,8 @@ def infer_on_stream(args):
     total_time_taken_to_infer_gaze_estimation = 0
 
 
+    last_frame_time = time.time()
+    mean_frame_time = 0.016
     while True:
         try:
             flag, frame  = cap.read()
@@ -153,7 +160,6 @@ def infer_on_stream(args):
             if output_intermediate_model == 'true':
                 out.write(frame_landmarks_regression_retail)
 
-            ### TODO: Start inference for gaze estimation ###
             start_inf_gaze_estimation = time.time()
             outputs_gaze_estimation = infer_network_gaze_estimation.predict(box_left_eye, box_right_eye, head_pose_angles)
             time_taken_to_infer_gaze_estimation = time.time() - start_inf_gaze_estimation
@@ -169,6 +175,7 @@ def infer_on_stream(args):
                 cv2.putText(frame,("Pitch: " + str(int(pitсh))), (10,50+20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv2.putText(frame,("Roll: " + str(int(roll))), (10, 90+20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv2.putText(frame,("detection: {:.2f}ms".format(time_taken_to_infer_gaze_estimation*1000)), (10, 130+20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+                # cv2.putText(frame,("fps: {:.1f}".format(1/mean_frame_time)), (10, 170+20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
 
             arrow = 100
             g_x = int(outputs_gaze_estimation[0]*arrow)
@@ -181,20 +188,37 @@ def infer_on_stream(args):
 
             # if output_intermediate_model == 'true':
             cv2.imshow("gaze", frame)
-                # cv2.waitKey
-                    # out.write(frame)
+            #     # cv2.waitKey
+            #         # out.write(frame)
 
-            # move(outputs_gaze_estimation[0], outputs_gaze_estimation[1])
+            # # move(outputs_gaze_estimation[0], outputs_gaze_estimation[1])
+
+            that_frame_time = time.time()
+            t_diff = that_frame_time - last_frame_time
+            last_frame_time = that_frame_time
+            if t_diff != 0 and t_diff < 2:
+                mean_frame_time = mean_frame_time * 0.9 + t_diff * 0.1
 
             key_pressed = cv2.waitKey(1)
-            if key_pressed == 27:
-                break
         except IndexError as e:
             continue
         except cv2.error as e:
             continue
         except Exception as e:
             raise e
+
+        # cv2.imshow("gaze", frame)
+
+        # that_frame_time = time.time()
+        # t_diff = that_frame_time - last_frame_time
+        # last_frame_time = that_frame_time
+        # if t_diff != 0 and t_diff < 2:
+        #     mean_frame_time = mean_frame_time * 0.9 + t_diff * 0.1
+        # print("fps: {:.1f}".format(1/mean_frame_time))
+
+        # key_pressed = cv2.waitKey(1)
+        # if key_pressed == 27:
+            # break
     feed.close()
 
     logging.debug("total inference times for facial detection : {} , landmark detection : {} , head pose detection : {} , gaze estimation : {} ".format(total_time_taken_to_infer_inf_face_detection, total_time_taken_to_infer_landmarks_regression_retail, total_time_taken_to_infer_inf_head_pose_estimation, total_time_taken_to_infer_gaze_estimation))

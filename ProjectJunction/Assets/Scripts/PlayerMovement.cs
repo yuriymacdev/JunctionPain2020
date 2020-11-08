@@ -8,10 +8,8 @@ public class PlayerMovement : MonoBehaviour
     // Input for player manipulation where you plug in the external class.
     public Camera cam;
     public Vector2 input_position;
-    
-    public bool IsUsingMouse = true; 
 
-    public float player_speed;
+   public float player_speed;
    
     
     /// Clamping Variables to keep the object on the screen.  
@@ -19,7 +17,6 @@ public class PlayerMovement : MonoBehaviour
     public float right_limit;
     public float top_limit;
     public float bottom_limit;
-
     // Tempory mouse input.
     Vector2 mouse_position;
 
@@ -31,48 +28,18 @@ public class PlayerMovement : MonoBehaviour
         player_transform = GetComponent<Transform>();
         top_limit = cam.pixelHeight - 64;
         right_limit = cam.pixelWidth - 64;
-
-        if(IsUsingMouse == true)
-        {
-            GetComponent<WhiteSquareBehaviour>().enabled = false;
-
-        }else
-        {
-            GetComponent<WhiteSquareBehaviour>().enabled = true;
-
-        }
     }
 
     // Update is called once per frame
     void Update()
     {
         // Get Converted Screen Space position of mouse;
+        Vector3 point = cam.ScreenToWorldPoint( new Vector3(Input.mousePosition.x,Input.mousePosition.y,Input.mousePosition.z));
 
-        /// If you are using the mouse this is the input data. 
-        if(IsUsingMouse == true)
-        {
-            Vector3 point = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z));
-
-
-
-            input_position = point;
-
-            PlayerControl(input_position);
-            ClampPlayerObjectToArea(left_limit, right_limit, top_limit, bottom_limit);
-        }
-
-        //---------------------------------- If you are using WhiteSquare ----------------- 
-        else if (IsUsingMouse == false)
-        {
-            Vector3 output_from_WhiteSquare = GetComponent<WhiteSquareBehaviour>().GetVectorData();
-            Vector3 point = cam.ScreenToWorldPoint(new Vector3(output_from_WhiteSquare.x, output_from_WhiteSquare.y, output_from_WhiteSquare.z));
-            input_position = point;
-            Debug.Log("Input Received from whiteSquare" + input_position.x + " : " + input_position.y);
-            PlayerControl(point);
-            ClampPlayerObjectToArea(left_limit, right_limit, top_limit, bottom_limit);
-        }
-
-        
+        input_position = point;
+      
+        PlayerControl(input_position);
+        ClampPlayerObjectToArea(left_limit,right_limit,top_limit,bottom_limit);
     }
 
     void PlayerControl(Vector2 input_position)
@@ -83,7 +50,10 @@ public class PlayerMovement : MonoBehaviour
         // move towards moves this game object towards a target object position. 
         transform.position = Vector3.MoveTowards(transform.position, input_position, step);
         
-       
+        
+        /// Original move command. 
+        // player_transform.position = new Vector3(input_position.x, input_position.y, 0.0f);
+
     }
 
     void ClampPlayerObjectToArea(float left_limit, float right_limit, float top_limit,float bottom_limit)

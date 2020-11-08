@@ -1210,7 +1210,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 963194227}
   input_position: {x: 0, y: 0}
-  IsUsingMouse: 1
   player_speed: 16
   left_limit: 0
   right_limit: 0
@@ -1229,6 +1228,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6821995, y: 0.41177577, z: 0.8608203}
   m_Center: {x: 0, y: 0, z: 0.3320619}
+<<<<<<< HEAD
 <<<<<<< HEAD
 --- !u!114 &3617500628085181116
 MonoBehaviour:
@@ -1250,6 +1250,8 @@ Transform:
   m_PrefabInstance: {fileID: 3851386448858628956}
   m_PrefabAsset: {fileID: 0}
 >>>>>>> f68bf42309f175a6e0b45fce28455df217e58e45
+=======
+>>>>>>> parent of 9c31fe2... Added WhiteSquare to player controller
 --- !u!1001 &3851386448858628956
 PrefabInstance:
   m_ObjectHideFlags: 0

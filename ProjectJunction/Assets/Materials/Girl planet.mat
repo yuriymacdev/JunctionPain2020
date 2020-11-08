@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Girl planet
-  m_Shader: {fileID: 1, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 101, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -79,4 +79,3 @@ Material:
     m_Colors:
     - _Color: {r: 0.5344251, g: 0.6792453, b: 0.5596643, a: 0.5254902}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-  m_BuildTextureStacks: []

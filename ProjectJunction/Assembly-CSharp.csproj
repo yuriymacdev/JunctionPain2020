@@ -64,7 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\CollectableSpawning.cs" />
+    <Compile Include="Assets\CreateStars.cs" />
     <Compile Include="Assets\OnPickUp.cs" />
+    <Compile Include="Assets\ReplayScript.cs" />
     <Compile Include="Assets\Score_Script.cs" />
     <Compile Include="Assets\Scripts\BackGroundObjects.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />

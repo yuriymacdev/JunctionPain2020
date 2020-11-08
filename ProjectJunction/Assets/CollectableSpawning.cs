@@ -14,11 +14,7 @@ public class CollectableSpawning : MonoBehaviour
     public float lowest_velocity = 1.0f;
     public float Maximum_velocity = 3.0f;
 
-    void Start()
-    {
-        
-    }
-
+  
     // Update is called once per frame
     void Update()
     {

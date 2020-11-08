@@ -22,37 +22,38 @@ public class WhiteSquareBehaviour : MonoBehaviour
     {
         pos_last = gameObject.transform.position;
 
-        input_thread = new Thread(this.inputAcquireThreadWork);
-        input_thread.Start();
+       // input_thread = new Thread(this.inputAcquireThreadWork);
+       // input_thread.Start();
     }
 
     private static Vector2 getInput(UdpClient client) {
         Vector3 rpy = new Vector3(0, 0, 0);
-        try
-        {
-            // client.Connect("xxx.com", 11000);
-            // Byte[] sendBytes = Encoding.ASCII.GetBytes("Is anybody there?");
+       
+    try
+    {
+        // client.Connect("xxx.com", 11000);
+        // Byte[] sendBytes = Encoding.ASCII.GetBytes("Is anybody there?");
 
-            // client.Send(sendBytes, sendBytes.Length);
+        // client.Send(sendBytes, sendBytes.Length);
 
-            // UdpClient udpClientB = new UdpClient();
-            // udpClientB.Send(sendBytes, sendBytes.Length, "127.0.0.1", 11000);
+        // UdpClient udpClientB = new UdpClient();
+        // udpClientB.Send(sendBytes, sendBytes.Length, "127.0.0.1", 11000);
 
-            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 11000);
+        IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 11000);
 
-            Byte[] receiveBytes = client.Receive(ref RemoteIpEndPoint);
-            string returnData = Encoding.ASCII.GetString(receiveBytes);
+        Byte[] receiveBytes = client.Receive(ref RemoteIpEndPoint);
+        string returnData = Encoding.ASCII.GetString(receiveBytes);
 
-            string[] tokens = returnData.Split(' ');
-            rpy.x = float.Parse(tokens[0]);
-            rpy.y = float.Parse(tokens[1]);
-            rpy.z = float.Parse(tokens[2]);
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.ToString());
-        }
-
+        string[] tokens = returnData.Split(' ');
+        rpy.x = float.Parse(tokens[0]);
+        rpy.y = float.Parse(tokens[1]);
+        rpy.z = float.Parse(tokens[2]);
+    }
+    catch (Exception e)
+    {
+        Debug.Log(e.ToString());
+    }
+      
         return new Vector2() {x = rpy.z, y = -rpy.y};
     }
 
@@ -77,6 +78,8 @@ public class WhiteSquareBehaviour : MonoBehaviour
         }
         udpClient.Close();
         Debug.Log("Thread Exit");
+        
+        
     }
 
     private Vector3 velocity = new Vector3(0, 0, 0);
@@ -84,12 +87,18 @@ public class WhiteSquareBehaviour : MonoBehaviour
     void Update()
     {
         // gameObject.transform.Rotate(0, 0, 100 * Time.deltaTime);
-
+       
         Vector3 accel = new Vector3(last_input_report.x, last_input_report.y, 0) * Time.deltaTime * 0.3f;
         velocity = velocity*0.1f + accel;
         gameObject.transform.position += velocity; 
+        
     }
 
+    public Vector3 GetVectorData()
+    {
+        Vector3 output_vector = last_input_report;
+        return output_vector;
+    }
     void OnDestroy() {
         Debug.Log("Destroying...");
         if (!(input_thread is null) && input_thread.IsAlive) {

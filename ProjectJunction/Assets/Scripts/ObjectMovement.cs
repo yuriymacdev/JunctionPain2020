@@ -29,7 +29,11 @@ public class ObjectMovement : MonoBehaviour
         if (point.x < -50)
         {
             DestroyOnLeavingScreen();
-            cam.GetComponent<GameController>().AddToScore(object_score_value);
+            if(cam.GetComponent<GameController>().player_has_died == false)
+            {
+                cam.GetComponent<GameController>().AddToScore(object_score_value);
+            }
+           
         }
         else if (point.x > 2000)
         {

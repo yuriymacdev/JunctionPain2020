@@ -98,4 +98,10 @@ public class WhiteSquareBehaviour : MonoBehaviour
         }
         Debug.Log("Destroyed");
     }
+
+   public Vector3 GetOutPutData()
+    {
+        return last_input_report;
+
+    }
 }

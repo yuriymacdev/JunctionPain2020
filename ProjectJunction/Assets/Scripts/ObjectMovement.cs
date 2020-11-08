@@ -10,7 +10,7 @@ public class ObjectMovement : MonoBehaviour
     // public float max_speed_verticle = 4.0f;
 
     public Camera cam;
-
+    public int object_score_value = 2;
 
     void Start()
     {
@@ -29,6 +29,7 @@ public class ObjectMovement : MonoBehaviour
         if (point.x < -50)
         {
             DestroyOnLeavingScreen();
+            cam.GetComponent<GameController>().AddToScore(object_score_value);
         }
         else if (point.x > 2000)
         {
@@ -57,12 +58,12 @@ public class ObjectMovement : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-
+            cam.GetComponent<GameController>().player_has_died = true;
             Debug.Log("Hit Player");
             Destroy(gameObject);
             Destroy(collision.gameObject);
             Debug.Log("GAME OVER");
-            cam.GetComponent<GameController>().player_has_died = true;
+            
         }
     }
 }

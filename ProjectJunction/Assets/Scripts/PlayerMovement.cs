@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     // Input for player manipulation where you plug in the external class.
     public Camera cam;
     public Vector2 input_position;
-
+    private WhiteSquareBehaviour wsb;
    public float player_speed;
    
     
@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     public float bottom_limit;
     // Tempory mouse input.
     Vector2 mouse_position;
+    public bool IsUsingMouse = false;
 
 
     Transform player_transform;
@@ -28,18 +29,36 @@ public class PlayerMovement : MonoBehaviour
         player_transform = GetComponent<Transform>();
         top_limit = cam.pixelHeight - 64;
         right_limit = cam.pixelWidth - 64;
+
+        wsb = GetComponent<WhiteSquareBehaviour>();
     }
 
     // Update is called once per frame
     void Update()
     {
         // Get Converted Screen Space position of mouse;
-        Vector3 point = cam.ScreenToWorldPoint( new Vector3(Input.mousePosition.x,Input.mousePosition.y,Input.mousePosition.z));
 
-        input_position = point;
-      
-        PlayerControl(input_position);
-        ClampPlayerObjectToArea(left_limit,right_limit,top_limit,bottom_limit);
+        // If you are using a mouse.
+        if(IsUsingMouse == true)
+        {
+            Vector3 point = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z));
+
+            input_position = point;
+
+            PlayerControl(input_position);
+            ClampPlayerObjectToArea(left_limit, right_limit, top_limit, bottom_limit);
+        }else if (IsUsingMouse == false)
+        {
+            Vector3 input = wsb.GetComponent<WhiteSquareBehaviour>().GetOutPutData();
+            Vector3 point = cam.ScreenToWorldPoint(new Vector3(input.x, input.y, input.z));
+
+            input_position = point;
+
+            PlayerControl(input_position);
+            ClampPlayerObjectToArea(left_limit, right_limit, top_limit, bottom_limit);
+
+        }
+        
     }
 
     void PlayerControl(Vector2 input_position)

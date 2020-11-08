@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
+    int player_score = 0;
 
     /// <summary>
     ///  So far this is just for closing the application.
@@ -23,5 +24,13 @@ public class GameController : MonoBehaviour
             
         }
 
+    }
+    public void AddToScore(int value)
+    {
+        player_score += value;
+    }
+    public int GetScore()
+    {
+        return player_score;
     }
 }
